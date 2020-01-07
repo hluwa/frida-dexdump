@@ -20,5 +20,7 @@ for dex in matches:
     bs = script.exports.memorydump(dex['addr'], dex['size'])
     if not os.path.exists("./" + pkg_name + "/"):
         os.mkdir("./" + pkg_name + "/")
+    if bs[:4] != "dex\n":
+        bs = b"dex\n035\x00" + bs[8:]
     open(pkg_name + "/" + dex['addr'] + ".dex", 'wb').write(bs)
     print("[DEXDump]: DexSize=" + hex(dex['size']) + ", SavePath=./" + pkg_name + "/" + dex['addr'] + ".dex")
