@@ -22,5 +22,6 @@ for dex in matches:
         os.mkdir("./" + pkg_name + "/")
     if bs[:4] != "dex\n":
         bs = b"dex\n035\x00" + bs[8:]
-    open(pkg_name + "/" + dex['addr'] + ".dex", 'wb').write(bs)
+    with open(pkg_name + "/" + dex['addr'] + ".dex", 'wb') as out:
+        out.write(bs)
     print("[DEXDump]: DexSize=" + hex(dex['size']) + ", SavePath=./" + pkg_name + "/" + dex['addr'] + ".dex")

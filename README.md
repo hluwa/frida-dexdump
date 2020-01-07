@@ -11,3 +11,7 @@ Implemented with search dex-magic in memory.
 1. launch app.
 2. python main.py.
 3. check ./<pkg_name>/*.dex.
+
+## Screenshot
+
+![](screenshot.png)
