@@ -4,7 +4,7 @@ Is an Android Unpacker for fast and simple.
 Implemented with search dex-magic in memory.
 
 ## Feature
-1. support fuzz search no-magic dex. (eg: baidu protect)
+1. support fuzzy search no-magic dex. (eg: baidu protect)
 2. auto fill magic into dex-header.
 
 ## Usage
