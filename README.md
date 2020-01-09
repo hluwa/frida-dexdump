@@ -10,7 +10,7 @@ Implemented with search dex-magic in memory.
 ## Usage
 1. launch app.
 2. python main.py.
-3. check ./<pkg_name>/*.dex.
+3. check `./<pkg_name>/*.dex` on computer.
 
 ## Screenshot
 
