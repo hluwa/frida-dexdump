@@ -38,10 +38,12 @@ rpc.exports = {
                     var dex_size = match.address.add("0x20").readInt();
 
                     if (range != null) {
-                        if (range.file) {
-                            if (range.file.path && (range.file.path.startsWith("/data/app/") || range.file.path.startsWith("/data/dalvik-cache/") || range.file.path.startsWith("/system/"))) {
-                                return;
-                            }
+
+                        if (range.file && range.file.path
+                            && (range.file.path.startsWith("/data/app/")
+                                || range.file.path.startsWith("/data/dalvik-cache/")
+                                || range.file.path.startsWith("/system/"))) {
+                            return;
                         }
 
                         if (match.address.toInt32() + dex_size > range.base.toInt32() + range.size) {
