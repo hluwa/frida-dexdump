@@ -22,13 +22,15 @@ else:
     s_processes = ""
     for index in range(len(processes)):
         s_processes += "\t[{}] {}\n".format(index, str(processes[index]))
-    print("[{}] has multiprocess: \n{}\nplease choose target process: ".format(pkg_name, s_processes), end="")
-    input_id = int(input())
+    input_id = int(input("[{}] has multiprocess: \n{}\nplease choose target process: "
+                         .format(pkg_name, s_processes)))
     target = processes[input_id]
     try:
         for index in range(len(processes)):
-            if index == input_id: continue
-            os.system("adb shell \"su -c 'kill -19 {}'\"".format(processes[index].pid))
+            if index == input_id:
+                os.system("adb shell \"su -c 'kill -18 {}'\"".format(processes[index].pid))
+            else:
+                os.system("adb shell \"su -c 'kill -19 {}'\"".format(processes[index].pid))
     except:
         pass
 
