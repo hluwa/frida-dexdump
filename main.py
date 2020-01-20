@@ -36,7 +36,9 @@ else:
 
 print("[DEXDump]: found target [{}] {}".format(target.pid, pkg_name))
 session = device.attach(target.pid)
-script = session.create_script(open(os.path.dirname(sys.argv[0]) + "/agent.js").read())
+path = os.path.dirname(sys.argv[0])
+path = path if path else "."
+script = session.create_script(open(path + "/agent.js").read())
 script.load()
 
 matches = script.exports.scandex()
