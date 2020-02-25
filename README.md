@@ -1,5 +1,7 @@
 # FRIDA-DEXDump
 
+[Chinese WriteUp](https://bbs.pediy.com/thread-257829.htm)
+
 Is an Android Unpacker for fast and simple.
 Implemented with search dex-magic in memory.
 
