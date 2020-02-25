@@ -10,8 +10,10 @@ import frida
 def get_all_process(device, pkgname):
     return [process for process in device.enumerate_processes() if process.name == pkgname]
 
-
-device = frida.get_usb_device()
+try:
+    device = frida.get_usb_device()
+except:
+    device = frida.get_remote_device()
 target = device.get_frontmost_application()
 pkg_name = target.identifier
 
