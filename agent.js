@@ -42,8 +42,8 @@ rpc.exports = {
                     if (range != null) {
 
                         if (range.file && range.file.path
-                            && (range.file.path.startsWith("/data/app/")
-                                || range.file.path.startsWith("/data/dalvik-cache/")
+                            && (// range.file.path.startsWith("/data/app/")
+                                range.file.path.startsWith("/data/dalvik-cache/")
                                 || range.file.path.startsWith("/system/"))) {
                             return;
                         }
