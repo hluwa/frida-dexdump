@@ -5,10 +5,16 @@
 import os
 import sys
 import frida
+import logging
+
+logging.basicConfig(level=logging.INFO,
+                    format="%(asctime)s %(levelname)s %(message)s",
+                    datefmt='%m-%d/%H:%M:%S')
 
 
 def get_all_process(device, pkgname):
     return [process for process in device.enumerate_processes() if process.name == pkgname]
+
 
 try:
     device = frida.get_usb_device()
@@ -36,7 +42,7 @@ else:
     except:
         pass
 
-print("[DEXDump]: found target [{}] {}".format(target.pid, pkg_name))
+logging.info("[DEXDump]: found target [{}] {}".format(target.pid, pkg_name))
 session = device.attach(target.pid)
 path = os.path.dirname(sys.argv[0])
 path = path if path else "."
@@ -45,11 +51,14 @@ script.load()
 
 matches = script.exports.scandex()
 for dex in matches:
-    bs = script.exports.memorydump(dex['addr'], dex['size'])
-    if not os.path.exists("./" + pkg_name + "/"):
-        os.mkdir("./" + pkg_name + "/")
-    if bs[:4] != "dex\n":
-        bs = b"dex\n035\x00" + bs[8:]
-    with open(pkg_name + "/" + dex['addr'] + ".dex", 'wb') as out:
-        out.write(bs)
-    print("[DEXDump]: DexSize=" + hex(dex['size']) + ", SavePath=./" + pkg_name + "/" + dex['addr'] + ".dex")
+    try:
+        bs = script.exports.memorydump(dex['addr'], dex['size'])
+        if not os.path.exists("./" + pkg_name + "/"):
+            os.mkdir("./" + pkg_name + "/")
+        if bs[:4] != "dex\n":
+            bs = b"dex\n035\x00" + bs[8:]
+        with open(pkg_name + "/" + dex['addr'] + ".dex", 'wb') as out:
+            out.write(bs)
+        logging.info("[DEXDump]: DexSize=" + hex(dex['size']) + ", SavePath=./" + pkg_name + "/" + dex['addr'] + ".dex")
+    except Exception as e:
+        logging.error("[Except] - {}: {}".format(e, dex))
