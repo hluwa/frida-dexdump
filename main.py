@@ -59,6 +59,7 @@ for dex in matches:
             bs = b"dex\n035\x00" + bs[8:]
         with open(pkg_name + "/" + dex['addr'] + ".dex", 'wb') as out:
             out.write(bs)
-        logging.info("[DEXDump]: DexSize=" + hex(dex['size']) + ", SavePath=./" + pkg_name + "/" + dex['addr'] + ".dex")
+        logging.info("[DEXDump]: DexSize={}, SavePath={}/{}/{}.dex"
+                     .format(hex(dex['size']), os.getcwd(), pkg_name, dex['addr']))
     except Exception as e:
         logging.error("[Except] - {}: {}".format(e, dex))
