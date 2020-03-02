@@ -5,7 +5,7 @@
 Is an Android Unpacker for fast and simple.
 Implemented with search dex-magic in memory.
 
-## Feature
+## Features
 1. support fuzzy search no-magic dex. (eg: baidu protect)
 2. auto fill magic into dex-header.
 3. compatible with full android version(frida supported).
