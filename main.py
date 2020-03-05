@@ -48,33 +48,33 @@ def dump(pkg_name, api):
             click.secho("[Except] - {}: {}".format(e, info), bg='yellow')
 
 
-try:
-    device = frida.get_usb_device()
-except:
-    device = frida.get_remote_device()
-target = device.get_frontmost_application()
-pkg_name = target.identifier
-
-processes = get_all_process(device, pkg_name)
-if len(processes) == 1:
-    target = processes[0]
-else:
-    s_processes = ""
-    for index in range(len(processes)):
-        s_processes += "\t[{}] {}\n".format(index, str(processes[index]))
-    input_id = int(input("[{}] has multiprocess: \n{}\nplease choose target process: "
-                         .format(pkg_name, s_processes)))
-    target = processes[input_id]
-    try:
-        for index in range(len(processes)):
-            if index == input_id:
-                os.system("adb shell \"su -c 'kill -18 {}'\"".format(processes[index].pid))
-            else:
-                os.system("adb shell \"su -c 'kill -19 {}'\"".format(processes[index].pid))
-    except:
-        pass
-
 if __name__ == "__main__":
+    try:
+        device = frida.get_usb_device()
+    except:
+        device = frida.get_remote_device()
+    target = device.get_frontmost_application()
+    pkg_name = target.identifier
+
+    processes = get_all_process(device, pkg_name)
+    if len(processes) == 1:
+        target = processes[0]
+    else:
+        s_processes = ""
+        for index in range(len(processes)):
+            s_processes += "\t[{}] {}\n".format(index, str(processes[index]))
+        input_id = int(input("[{}] has multiprocess: \n{}\nplease choose target process: "
+                             .format(pkg_name, s_processes)))
+        target = processes[input_id]
+        try:
+            for index in range(len(processes)):
+                if index == input_id:
+                    os.system("adb shell \"su -c 'kill -18 {}'\"".format(processes[index].pid))
+                else:
+                    os.system("adb shell \"su -c 'kill -19 {}'\"".format(processes[index].pid))
+        except:
+            pass
+
     logging.info("[DEXDump]: found target [{}] {}".format(target.pid, pkg_name))
     session = device.attach(target.pid)
     path = os.path.dirname(sys.argv[0])
