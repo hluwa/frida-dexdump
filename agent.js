@@ -15,7 +15,6 @@ function verify_by_maps(dexptr, mapsptr) {
         if (item_type === 4096) {
             var map_offset = mapsptr.add(4 + i * 0xC + 8).readUInt();
             if (maps_offset === map_offset) {
-                console.log("true");
                 return true;
             }
         }
