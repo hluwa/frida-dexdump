@@ -39,6 +39,10 @@ function verify(dexptr, range, enable_verify_maps) {
 
         if (enable_verify_maps) {
             var maps_offset = dexptr.add(0x34).readUInt();
+            if (maps_offset === 0) {
+                return false
+            }
+
             var maps_address = dexptr.add(maps_offset);
             if (maps_address > range_end) {
                 return false
