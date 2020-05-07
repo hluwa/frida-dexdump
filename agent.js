@@ -96,7 +96,7 @@ rpc.exports = {
                         if (dex_base.readCString(4) != "dex\n" && verify(dex_base, range, true)) {
                             var dex_size = dex_base.add(0x20).readUInt();
                             result.push({
-                                "addr": match.address,
+                                "addr": dex_base,
                                 "size": dex_size
                             });
                         }
