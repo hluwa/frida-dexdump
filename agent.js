@@ -5,7 +5,7 @@
 * */
 
 
-var enable_deep_search = true;
+var enable_deep_search = false;
 
 function verify_by_maps(dexptr, mapsptr) {
     var maps_offset = dexptr.add(0x34).readUInt();
