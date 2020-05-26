@@ -1,13 +1,13 @@
 # FRIDA-DEXDump
 
-[Chinese WriteUp](https://bbs.pediy.com/thread-257829.htm)
+[Chinese WriteUp](https://mp.weixin.qq.com/s/x8_aa762wpsvA4nhSLoppQ)
 
 Fast search and dump dex on memory.
 
 ## Features
-1. support fuzzy search no-magic dex. (eg: baidu protect)
+1. support fuzzy search no-magic dex.
 2. auto fill magic into dex-header.
-3. compatible with full android version(frida supported).
+3. compatible with all android version(frida supported).
 4. support loading as objection plugin~
 
 ## Usage
