@@ -69,6 +69,9 @@ rpc.exports = {
     memorydump: function memorydump(address, size) {
         return new NativePointer(address).readByteArray(size);
     },
+    switchmode: function switchmode(bool){
+        enable_deep_search = bool;
+    },
     scandex: function scandex() {
         var result = [];
         Process.enumerateRanges('r--').forEach(function (range) {
