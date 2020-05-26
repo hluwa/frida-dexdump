@@ -63,7 +63,7 @@ def dump(pkg_name, api):
             bs = api.memorydump(info['addr'], info['size'])
             if not os.path.exists("./" + pkg_name + "/"):
                 os.mkdir("./" + pkg_name + "/")
-            if bs[:4] != "dex\n":
+            if bs[:4] != b"dex\n":
                 bs = b"dex\n035\x00" + bs[8:]
             with open(pkg_name + "/" + info['addr'] + ".dex", 'wb') as out:
                 out.write(bs)
