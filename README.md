@@ -12,9 +12,10 @@ Fast search and dump dex on memory.
 
 ## Usage
 1. update your frida-server and frida python binding to latest.
-2. launch app.
-3. run: python main.py.
-4. check `SavePath`.
+2. install require: `pip install -r requirements.txt`
+3. launch app.
+4. run: python main.py.
+5. check `SavePath`.
 
 ### objection plugin
 
