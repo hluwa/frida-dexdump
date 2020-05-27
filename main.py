@@ -9,7 +9,10 @@ import sys
 try:
     from shutil import get_terminal_size as get_terminal_size
 except:
-    from backports.shutil_get_terminal_size import get_terminal_size as get_terminal_size
+    try:
+        from backports.shutil_get_terminal_size import get_terminal_size as get_terminal_size
+    except:
+        pass
 
 import click
 import frida
