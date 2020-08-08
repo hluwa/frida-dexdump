@@ -136,14 +136,27 @@ def choose(pid=None, pkg=None, spawn=False, device=None):
         return pid, pkg
     raise Exception("Cannot found <{}> process".format(pid))
 
-
-if __name__ == "__main__":
-    show_banner()
-
+def connect_device():
     try:
         device = frida.get_usb_device()
     except:
         device = frida.get_remote_device()
+
+    return device
+
+
+if __name__ == "__main__":
+    show_banner()
+
+    def forward_frida():
+        os.system("adb forward tcp:27042 tcp:27042")
+        os.system("adb forward tcp:27043 tcp:27043")
+
+    try:
+        device = connect_device()
+    except:
+        forward_frida()
+        device = connect_device()
 
     if not device:
         click.secho("[Except] - Unable to connect to device.", bg='red')
