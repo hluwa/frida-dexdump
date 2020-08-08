@@ -5,6 +5,8 @@ import hashlib
 import os
 import random
 import sys
+import getopt
+import time
 
 try:
     from shutil import get_terminal_size as get_terminal_size
@@ -136,6 +138,18 @@ def choose(pid=None, pkg=None, spawn=False, device=None):
         return pid, pkg
     raise Exception("Cannot found <{}> process".format(pid))
 
+
+def show_help():
+    help_str = "dumpdex -n <process> -p <pid> -f[enable spawn mode] -s <delay seconds> -d[enable deep search]\n" \
+               "    -n: [Optional] Specify target process name, when spawn mode, it requires an application package name. If not specified, use frontmost application.\n" \
+               "    -p: [Optional] Specify pid when multiprocess. If not specified, dump all.\n" \
+               "    -f: [Optional] Use spawn mode, default is disable.\n" \
+               "    -s: [Optional] When spawn mode, start dump work after sleep few seconds. default is 10s.\n" \
+               "    -d: [Optional] Enable deep search maybe detected more dex, but speed will be slower.\n" \
+               "    -h: show help."
+    print(help_str)
+
+
 def connect_device():
     try:
         device = frida.get_usb_device()
@@ -148,12 +162,51 @@ def connect_device():
 if __name__ == "__main__":
     show_banner()
 
+    process = None
+    pid = None
+    enable_spawn_mode = False
+    delay_second = 10
+    enable_deep_search = False
+
+    try:
+        opts, args = getopt.getopt(sys.argv[1:], "hn:p:fs:d")
+
+        def arg2int(v):
+            try:
+                return int(v)
+            except:
+                return int(v.replace('0x', ''), 16)
+
+        for arg, value in opts:
+            if arg == '-n':
+                process = value
+            elif arg == '-p':
+                pid = arg2int(value)
+            elif arg == '-f':
+                enable_spawn_mode = True
+            elif arg == '-s':
+                delay_second = arg2int(value)
+            elif arg == "-d":
+                enable_deep_search = True
+            elif arg == '-h':
+                show_help()
+                exit(0)
+
+    except getopt.GetoptError:
+        show_help()
+        exit(2)
+
+    if enable_spawn_mode and pid is not None:
+        pid = None
+
     def forward_frida():
         os.system("adb forward tcp:27042 tcp:27042")
         os.system("adb forward tcp:27043 tcp:27043")
 
     try:
         device = connect_device()
+        if not device:
+            raise Exception("Unable to connect.")
     except:
         forward_frida()
         device = connect_device()
@@ -162,10 +215,11 @@ if __name__ == "__main__":
         click.secho("[Except] - Unable to connect to device.", bg='red')
         exit()
 
-    pid = -1
-    pname = ""
+    pname = None
     try:
-        pid, pname = choose(device=device)
+        _, pname = choose(device=device, pkg=process, spawn=enable_spawn_mode)
+        if enable_spawn_mode:
+            time.sleep(delay_second)
     except Exception as e:
         click.secho("[Except] - Unable to inject into process: {} in \n{}".format(e, traceback.format_tb(
             sys.exc_info()[2])[-1]), bg='red')
@@ -174,12 +228,18 @@ if __name__ == "__main__":
     processes = get_all_process(device, pname)
     mds = []
     for process in processes:
+
+        if pid is not None and process.pid != pid:
+            continue
+
         logging.info("[DEXDump]: found target [{}] {}".format(process.pid, process.name))
         stop_other(process.pid, processes)
         session = device.attach(process.pid)
         path = os.path.dirname(__file__)
         script = session.create_script(open(os.path.join(path, "/agent.js")).read())
         script.load()
+        if enable_deep_search:
+            script.exports.switchmode(True)
         dump(pname, script.exports, mds=mds)
         script.unload()
         session.detach()
