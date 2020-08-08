@@ -217,7 +217,7 @@ if __name__ == "__main__":
 
     pname = None
     try:
-        _, pname = choose(device=device, pkg=process, spawn=enable_spawn_mode)
+        _, pname = choose(device=device, pkg=process, pid=pid, spawn=enable_spawn_mode)
         if enable_spawn_mode:
             time.sleep(delay_second)
     except Exception as e:
