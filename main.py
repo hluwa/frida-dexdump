@@ -177,9 +177,8 @@ if __name__ == "__main__":
         logging.info("[DEXDump]: found target [{}] {}".format(process.pid, process.name))
         stop_other(process.pid, processes)
         session = device.attach(process.pid)
-        path = os.path.dirname(sys.argv[0])
-        path = path if path else "."
-        script = session.create_script(open(path + "/agent.js").read())
+        path = os.path.dirname(__file__)
+        script = session.create_script(open(os.path.join(path, "/agent.js")).read())
         script.load()
         dump(pname, script.exports, mds=mds)
         script.unload()
