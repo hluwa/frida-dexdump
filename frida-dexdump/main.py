@@ -47,7 +47,7 @@ banner = """
                                                                                | |      
                                                                                |_|      
                       https://github.com/hluwa/FRIDA-DEXDump                            
-----------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------\n
 """
 
 md5 = lambda bs: hashlib.md5(bs).hexdigest()
@@ -60,8 +60,13 @@ def show_banner():
     except:
         colors = ['red', 'green', 'blue', 'cyan', 'magenta']
     try:
-        if get_terminal_size().columns >= len(banner.splitlines()[1]):
+        columns = get_terminal_size().columns
+        if columns >= len(banner.splitlines()[1]):
             for line in banner.splitlines():
+                if line:
+                    fill = (columns-len(line)) / 2
+                    line = line[0] * fill + line
+                    line += line[-1] * fill
                 click.secho(line, fg=random.choice(colors))
     except:
         pass
@@ -140,13 +145,13 @@ def choose(pid=None, pkg=None, spawn=False, device=None):
 
 
 def show_help():
-    help_str = "frida-dexdump -n <process> -p <pid> -f[enable spawn mode] -s <delay seconds> -d[enable deep search]\n" \
+    help_str = "Usage: frida-dexdump -n <process> -p <pid> -f[enable spawn mode] -s <delay seconds> -d[enable deep search]\n\n" \
                "    -n: [Optional] Specify target process name, when spawn mode, it requires an application package name. If not specified, use frontmost application.\n" \
                "    -p: [Optional] Specify pid when multiprocess. If not specified, dump all.\n" \
                "    -f: [Optional] Use spawn mode, default is disable.\n" \
                "    -s: [Optional] When spawn mode, start dump work after sleep few seconds. default is 10s.\n" \
                "    -d: [Optional] Enable deep search maybe detected more dex, but speed will be slower.\n" \
-               "    -h: show help."
+               "    -h: show help.\n"
     print(help_str)
 
 
