@@ -140,7 +140,7 @@ def choose(pid=None, pkg=None, spawn=False, device=None):
 
 
 def show_help():
-    help_str = "dumpdex -n <process> -p <pid> -f[enable spawn mode] -s <delay seconds> -d[enable deep search]\n" \
+    help_str = "frida-dexdump -n <process> -p <pid> -f[enable spawn mode] -s <delay seconds> -d[enable deep search]\n" \
                "    -n: [Optional] Specify target process name, when spawn mode, it requires an application package name. If not specified, use frontmost application.\n" \
                "    -p: [Optional] Specify pid when multiprocess. If not specified, dump all.\n" \
                "    -f: [Optional] Use spawn mode, default is disable.\n" \
@@ -219,6 +219,7 @@ if __name__ == "__main__":
     try:
         _, pname = choose(device=device, pkg=process, pid=pid, spawn=enable_spawn_mode)
         if enable_spawn_mode:
+            logging.info("[DEXDump]: sleep {}s".format(delay_second))
             time.sleep(delay_second)
     except Exception as e:
         click.secho("[Except] - Unable to inject into process: {} in \n{}".format(e, traceback.format_tb(
@@ -236,10 +237,11 @@ if __name__ == "__main__":
         stop_other(process.pid, processes)
         session = device.attach(process.pid)
         path = os.path.dirname(__file__)
-        script = session.create_script(open(os.path.join(path, "/agent.js")).read())
+        script = session.create_script(open(os.path.join(path, "agent.js")).read())
         script.load()
         if enable_deep_search:
             script.exports.switchmode(True)
+            logging.info("[DEXDump]: deep search mode is enable, may wait some time.")
         dump(pname, script.exports, mds=mds)
         script.unload()
         session.detach()
