@@ -7,6 +7,9 @@ import random
 import sys
 import getopt
 import time
+import frida
+import logging
+import traceback
 
 try:
     from shutil import get_terminal_size as get_terminal_size
@@ -27,10 +30,6 @@ except:
         @staticmethod
         def style(**kwargs):
             raise Exception("unsupported style")
-
-import frida
-import logging
-import traceback
 
 logging.basicConfig(level=logging.INFO,
                     format="%(asctime)s %(levelname)s %(message)s",
@@ -64,7 +63,7 @@ def show_banner():
         if columns >= len(banner.splitlines()[1]):
             for line in banner.splitlines():
                 if line:
-                    fill = (columns-len(line)) / 2
+                    fill = int((columns - len(line)) / 2)
                     line = line[0] * fill + line
                     line += line[-1] * fill
                 click.secho(line, fg=random.choice(colors))
@@ -164,7 +163,7 @@ def connect_device():
     return device
 
 
-if __name__ == "__main__":
+def entry():
     show_banner()
 
     process = None
@@ -251,3 +250,7 @@ if __name__ == "__main__":
         script.unload()
         session.detach()
     exit()
+
+
+if __name__ == "__main__":
+    entry()
