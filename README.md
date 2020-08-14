@@ -1,25 +1,38 @@
 # FRIDA-DEXDump
 
-Fast search and dump dex on memory.
+![](screenshot.png)
 
-[![asciicast](screenshot.png)](https://asciinema.org/a/352528)
+[Asciicast](https://asciinema.org/a/352528)
 
 ## Features
 1. support fuzzy search no-magic dex.
 2. auto fill magic into dex-header.
 3. compatible with all android version(frida supported).
 4. support python 2 and 3.
-5. support loading as objection plugin~
-
+5. support loading as objection plugin ~
+6. pypi package has been released ~
 
 ## Requires
 
 - [frida](https://www.github.com/frida/frida): `pip install frida`
 - [optional] [click](https://pypi.org/project/click/) `pip install click`
 
+## Installation
+
+### From pypi
+
+    pip install frida-dexdump
+    frida-dexdump -h
+
+### Form source
+
+    git clone https://github.com/hluwa/FRIDA-DEXDump
+    cd FRIDA-DEXDump/frida-dexdump
+    python main.py -h
+
 ## Usage
 
-- Run `python main.py` to attach current frontmost application and dump dexs.
+- Run `frida-dexdump` or `python main.py` to attach current frontmost application and dump dexs.
 
 - Or, use command arguments:  
     ```
