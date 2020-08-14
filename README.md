@@ -24,7 +24,7 @@
     pip install frida-dexdump
     frida-dexdump -h
 
-### Form source
+### From source
 
     git clone https://github.com/hluwa/FRIDA-DEXDump
     cd FRIDA-DEXDump/frida-dexdump
