@@ -1,8 +1,8 @@
 # FRIDA-DEXDump
 
-[Chinese WriteUp](https://mp.weixin.qq.com/s/x8_aa762wpsvA4nhSLoppQ)
-
 Fast search and dump dex on memory.
+
+[![asciicast](screenshot.png)](https://asciinema.org/a/352528)
 
 ## Features
 1. support fuzzy search no-magic dex.
@@ -40,7 +40,3 @@ Fast search and dump dex on memory.
     3. run command:
         1. ` plugin dexdump search ` to search and print all dex
         2. ` plugin dexdump dump ` to dump all found dex.
-
-## Screenshot
-
-[![asciicast](screenshot.png)](https://asciinema.org/a/352528)
