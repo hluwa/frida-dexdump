@@ -22,6 +22,51 @@ function verify_by_maps(dexptr, mapsptr) {
     return false;
 }
 
+
+function get_dex_real_size(dexptr, range_base, range_end) {
+    var dex_size = dexptr.add(0x20).readUInt();
+
+    var maps_address = get_maps_address(dexptr, range_base, range_end);
+    if (!maps_address) {
+        return dex_size;
+    }
+
+    var maps_end = get_maps_end(maps_address, range_base, range_end);
+    if (!maps_end) {
+        return dex_size;
+    }
+
+    return maps_end - dexptr
+}
+
+function get_maps_address(dexptr, range_base, range_end) {
+    var maps_offset = dexptr.add(0x34).readUInt();
+    if (maps_offset === 0) {
+        return null;
+    }
+
+    var maps_address = dexptr.add(maps_offset);
+    if (maps_address < range_base || maps_address > range_end) {
+        return null;
+    }
+
+    return maps_address;
+}
+
+function get_maps_end(maps, range_base, range_end) {
+    var maps_size = maps.readUInt();
+    if (maps_size < 2 || maps_size > 50) {
+        return null;
+    }
+    var maps_end = maps.add(maps_size * 0xC + 4);
+    if (maps_end < range_base || maps_end > range_end) {
+        return null;
+    }
+
+    return maps_end;
+}
+
+
 function verify(dexptr, range, enable_verify_maps) {
 
     if (range != null) {
@@ -31,36 +76,31 @@ function verify(dexptr, range, enable_verify_maps) {
             return false;
         }
 
+        // In runtime, the fileSize is can to be clean, so it's not trust.
         // verify file_size
-        var dex_size = dexptr.add(0x20).readUInt();
-        if (dexptr.add(dex_size) > range_end) {
-            return false;
-        }
+        // var dex_size = dexptr.add(0x20).readUInt();
+        // if (dexptr.add(dex_size) > range_end) {
+        //     return false;
+        // }
 
         if (enable_verify_maps) {
-            var maps_offset = dexptr.add(0x34).readUInt();
-            if (maps_offset === 0) {
-                return false
+
+            var maps_address = get_maps_address(dexptr, range.base, range_end);
+            if (!maps_address) {
+                return false;
             }
 
-            var maps_address = dexptr.add(maps_offset);
-            if (maps_address > range_end) {
-                return false
-            }
-
-            var maps_size = maps_address.readUInt();
-            if (maps_size < 2 || maps_size > 50) {
-                return false
-            }
-            var maps_end = maps_address.add(maps_size * 0xC + 4);
-            if (maps_end < range.base || maps_end > range_end) {
-                return false
+            var maps_end = get_maps_end(maps_address, range.base, range_end);
+            if (!maps_end) {
+                return false;
             }
             return verify_by_maps(dexptr, maps_address)
         } else {
             return dexptr.add(0x3C).readUInt() === 0x70;
         }
     }
+
+    return false;
 
 
 }
@@ -69,7 +109,7 @@ rpc.exports = {
     memorydump: function memorydump(address, size) {
         return new NativePointer(address).readByteArray(size);
     },
-    switchmode: function switchmode(bool){
+    switchmode: function switchmode(bool) {
         enable_deep_search = bool;
     },
     scandex: function scandex() {
@@ -86,7 +126,7 @@ rpc.exports = {
                     }
 
                     if (verify(match.address, range, false)) {
-                        var dex_size = match.address.add(0x20).readUInt();
+                        var dex_size = get_dex_real_size(match.address, range.base, range.base.add(range.size));
                         result.push({
                             "addr": match.address,
                             "size": dex_size
@@ -101,19 +141,21 @@ rpc.exports = {
                             return
                         }
                         if (dex_base.readCString(4) != "dex\n" && verify(dex_base, range, true)) {
-                            var dex_size = dex_base.add(0x20).readUInt();
+                            var real_dex_size = get_dex_real_size(dex_base, range.base, range.base.add(range.size));
                             result.push({
                                 "addr": dex_base,
-                                "size": dex_size
+                                "size": real_dex_size
                             });
                         }
                     })
                 } else {
                     if (range.base.readCString(4) != "dex\n" && verify(range.base, range, true)) {
-                        var dex_size = range.base.add(0x20).readUInt();
+                        // console.log("range.base=" + range.base);
+                        var real_dex_size = get_dex_real_size(range.base, range.base, range.base.add(range.size));
+                        // console.log("range.base=" + range.base + ", real_dex_size=" + real_dex_size);
                         result.push({
                             "addr": range.base,
-                            "size": dex_size
+                            "size": real_dex_size
                         });
                     }
                 }
