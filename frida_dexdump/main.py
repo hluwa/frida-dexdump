@@ -52,6 +52,25 @@ banner = """
 md5 = lambda bs: hashlib.md5(bs).hexdigest()
 
 
+def dex_fix(dex_bytes):
+    import struct
+    dex_size = len(dex_bytes)
+
+    if dex_bytes[:4] != b"dex\n":
+        dex_bytes = b"dex\n035\x00" + dex_bytes[8:]
+
+    if dex_size >= 0x24:
+        dex_bytes = dex_bytes[:0x20] + struct.Struct("<I").pack(dex_size) + dex_bytes[0x24:]
+
+    if dex_size >= 0x28:
+        dex_bytes = dex_bytes[:0x24] + struct.Struct("<I").pack(0x70) + dex_bytes[0x28:]
+
+    if dex_size >= 0x2C and dex_bytes[0x28:0x2C] not in [b'\x78\x56\x34\x12', b'\x12\x34\x56\x78']:
+        dex_bytes = dex_bytes[:0x28] + b'\x78\x56\x34\x12' + dex_bytes[0x2C:]
+
+    return dex_bytes
+
+
 def show_banner():
     colors = ['bright_red', 'bright_green', 'bright_blue', 'cyan', 'magenta']
     try:
@@ -102,8 +121,7 @@ def dump(pkg_name, api, mds=None):
             mds.append(md)
             if not os.path.exists("./" + pkg_name + "/"):
                 os.mkdir("./" + pkg_name + "/")
-            if bs[:4] != b"dex\n":
-                bs = b"dex\n035\x00" + bs[8:]
+            bs = dex_fix(bs)
             with open(pkg_name + "/" + info['addr'] + ".dex", 'wb') as out:
                 out.write(bs)
             click.secho("[DEXDump]: DexSize={}, DexMd5={}, SavePath={}/{}/{}.dex"
