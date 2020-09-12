@@ -9,8 +9,8 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="frida-dexdump",
-    version="1.0",
-    description="Fast dex dump base-on frida.",
+    version="1.0.1",
+    description="Fast dex dump in memory based on frida.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     author="hluwa",
@@ -27,8 +27,6 @@ setuptools.setup(
         "Operating System :: MacOS :: MacOS X",
         "Operating System :: Microsoft :: Windows",
         "Operating System :: POSIX :: Linux",
-        "Programming Language :: Python :: 2",
-        "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.4",
         "Programming Language :: Python :: 3.5",

@@ -6,12 +6,11 @@
 
 
 ## Features
-1. support fuzzy search no-magic dex.
-2. auto fill magic into dex-header.
+1. support fuzzy search broken header dex.
+2. fix struct data of dex-header.
 3. compatible with all android version(frida supported).
-4. support python 2 and 3.
-5. support loading as objection plugin ~
-6. pypi package has been released ~
+4. support loading as objection plugin ~
+5. pypi package has been released ~
 
 ## Requires
 
@@ -22,18 +21,18 @@
 
 ### From pypi
 
-    pip install frida-dexdump
+    pip3 install frida-dexdump
     frida-dexdump -h
 
 ### From source
 
     git clone https://github.com/hluwa/FRIDA-DEXDump
     cd FRIDA-DEXDump/frida-dexdump
-    python main.py -h
+    python3 main.py -h
 
 ## Usage
 
-- Run `frida-dexdump` or `python main.py` to attach current frontmost application and dump dexs.
+- Run `frida-dexdump` or `python3 main.py` to attach current frontmost application and dump dexs.
 
 - Or, use command arguments:  
     ```
@@ -48,10 +47,14 @@
 - Or, loading as objection plugin
 
     1. clone this repo and move `frida_dexdump` into your plugins folder, eg:
-        > git clone https://github.com/hluwa/FRIDA-DEXDump ~/Downloads/FRIDA-DEXDump
-        > mv ~/Downloads/FRIDA-DEXDump/frida_dexdump ~/.objection/plugins/dexdump
+        ```
+        git clone https://github.com/hluwa/FRIDA-DEXDump ~/Downloads/FRIDA-DEXDump;
+        mv ~/Downloads/FRIDA-DEXDump/frida_dexdump ~/.objection/plugins/dexdump
+        ```
     2. start objection with `-P` or `--plugin-folder` your plugins folder, eg:
-        > objection -g com.app.name explore -P ~/.objection/plugins
+        ```
+        objection -g com.app.name explore -P ~/.objection/plugins
+        ```
     3. run command:
         1. ` plugin dexdump search ` to search and print all dex
         2. ` plugin dexdump dump ` to dump all found dex.
