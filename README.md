@@ -1,8 +1,6 @@
 # FRIDA-DEXDump
 
-[中文](https://mp.weixin.qq.com/s/0Tlqsqm-Pdx03-ZiGG-hTQ), [Asciicast Video](https://asciinema.org/a/352528)
-
-![](screenshot.png)
+[![asciicast](https://asciinema.org/a/352528.svg)](https://asciinema.org/a/352528)
 
 
 ## Features
