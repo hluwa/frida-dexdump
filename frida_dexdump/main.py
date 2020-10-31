@@ -257,16 +257,22 @@ def entry():
 
         logging.info("[DEXDump]: found target [{}] {}".format(process.pid, process.name))
         stop_other(process.pid, processes)
-        session = device.attach(process.pid)
-        path = os.path.dirname(__file__)
-        script = session.create_script(open(os.path.join(path, "agent.js")).read())
-        script.load()
-        if enable_deep_search:
-            script.exports.switchmode(True)
-            logging.info("[DEXDump]: deep search mode is enable, may wait some time.")
-        dump(pname, script.exports, mds=mds)
-        script.unload()
-        session.detach()
+
+        try:
+            session = device.attach(process.pid)
+            path = os.path.dirname(__file__)
+            script = session.create_script(open(os.path.join(path, "agent.js")).read())
+            script.load()
+            if enable_deep_search:
+                script.exports.switchmode(True)
+                logging.info("[DEXDump]: deep search mode is enable, maybe wait long time.")
+            dump(pname, script.exports, mds=mds)
+            script.unload()
+            session.detach()
+        except Exception as e:
+            click.secho("[Except] - Unable dump dex: {} in \n{}".format(e, traceback.format_tb(
+                sys.exc_info()[2])[-1]), bg='red')
+            continue
     exit()
 
 

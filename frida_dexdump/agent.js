@@ -131,6 +131,14 @@ rpc.exports = {
                             "addr": match.address,
                             "size": dex_size
                         });
+
+                        var max_size = range.size - match.address.sub(range.base);
+                        if (enable_deep_search && max_size != dex_size) {
+                            result.push({
+                                "addr": match.address,
+                                "size": max_size
+                            });
+                        }
                     }
                 });
 
@@ -146,13 +154,18 @@ rpc.exports = {
                                 "addr": dex_base,
                                 "size": real_dex_size
                             });
+                            var max_size = range.size - dex_base.sub(range.base);
+                            if (max_size != real_dex_size) {
+                                result.push({
+                                    "addr": match.address,
+                                    "size": max_size
+                                });
+                            }
                         }
                     })
                 } else {
                     if (range.base.readCString(4) != "dex\n" && verify(range.base, range, true)) {
-                        // console.log("range.base=" + range.base);
                         var real_dex_size = get_dex_real_size(range.base, range.base, range.base.add(range.size));
-                        // console.log("range.base=" + range.base + ", real_dex_size=" + real_dex_size);
                         result.push({
                             "addr": range.base,
                             "size": real_dex_size
