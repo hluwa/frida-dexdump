@@ -1,6 +1,6 @@
 # FRIDA-DEXDump
 
-[![asciicast](https://asciinema.org/a/352528.svg)](https://asciinema.org/a/352528)
+![screenshot](screenshot.png)
 
 
 ## Features
