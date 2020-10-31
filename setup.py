@@ -9,7 +9,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="frida-dexdump",
-    version="1.0.1",
+    version="1.0.2",
     description="Fast dex dump in memory based on frida.",
     long_description=long_description,
     long_description_content_type="text/markdown",
