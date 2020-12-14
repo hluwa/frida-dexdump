@@ -172,9 +172,9 @@ def show_help():
     print(help_str)
 
 
-def connect_device():
+def connect_device(timeout=15):
     try:
-        device = frida.get_usb_device()
+        device = frida.get_usb_device(timeout=timeout)
     except:
         device = frida.get_remote_device()
 
