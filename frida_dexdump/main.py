@@ -168,8 +168,8 @@ def show_help():
                "    -f: [Optional] Use spawn mode, default is disable.\n" \
                "    -s: [Optional] When spawn mode, start dump work after sleep few seconds. default is 10s.\n" \
                "    -d: [Optional] Enable deep search maybe detected more dex, but speed will be slower.\n" \
-               "    -P: [Optional] Prepend a Frida script to run before jnitrace does.\n" \
-               "    -A: [Optional] Append a Frida script to run after jnitrace has started.\n" \
+               "    -P: [Optional] Prepend a Frida script to run before dexdump does.\n" \
+               "    -A: [Optional] Append a Frida script to run after dexdump done.\n" \
                "    -h: show help.\n"
     print(help_str)
 
@@ -278,16 +278,16 @@ def entry():
             script = session.create_script(open(os.path.join(path, "agent.js")).read())
             script.load()
 
-            if append_script_path:
-                append_script = session.create_script(open(append_script_path).read())
-                append_script.load()
-
             if enable_deep_search:
                 script.exports.switchmode(True)
                 logging.info("[DEXDump]: deep search mode is enable, maybe wait long time.")
 
             dump(pname, script.exports, mds=mds)
-
+            
+            if append_script_path:
+                append_script = session.create_script(open(append_script_path).read())
+                append_script.load()
+            
             if prepend_script_path: prepend_script.unload() 
             script.unload()
             if append_script_path: append_script.unload()
