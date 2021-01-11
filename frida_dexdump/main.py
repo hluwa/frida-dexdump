@@ -218,8 +218,6 @@ def entry():
                 prepend_script_path = value
             elif arg == "-A":
                 append_script_path = value
-            elif arg == "-d":
-                enable_deep_search = True
             elif arg == '-h':
                 show_help()
                 exit(0)
