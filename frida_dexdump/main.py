@@ -162,12 +162,14 @@ def choose(pid=None, pkg=None, spawn=False, device=None):
 
 
 def show_help():
-    help_str = "Usage: frida-dexdump -n <process> -p <pid> -f[enable spawn mode] -s <delay seconds> -d[enable deep search]\n\n" \
+    help_str = "Usage: frida-dexdump -n <process> -p <pid> -f[enable spawn mode] -s <delay seconds> -d[enable deep search] -P <prepend script path> -A <append script path>\n\n" \
                "    -n: [Optional] Specify target process name, when spawn mode, it requires an application package name. If not specified, use frontmost application.\n" \
                "    -p: [Optional] Specify pid when multiprocess. If not specified, dump all.\n" \
                "    -f: [Optional] Use spawn mode, default is disable.\n" \
                "    -s: [Optional] When spawn mode, start dump work after sleep few seconds. default is 10s.\n" \
                "    -d: [Optional] Enable deep search maybe detected more dex, but speed will be slower.\n" \
+               "    -P: [Optional] Prepend a Frida script to run before dexdump does.\n" \
+               "    -A: [Optional] Append a Frida script to run after dexdump done.\n" \
                "    -h: show help.\n"
     print(help_str)
 
@@ -189,9 +191,11 @@ def entry():
     enable_spawn_mode = False
     delay_second = 10
     enable_deep_search = False
+    prepend_script_path = None
+    append_script_path = None
 
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "hn:p:fs:d")
+        opts, args = getopt.getopt(sys.argv[1:], "hn:p:fs:dP:A:")
 
         def arg2int(v):
             try:
@@ -210,6 +214,10 @@ def entry():
                 delay_second = arg2int(value)
             elif arg == "-d":
                 enable_deep_search = True
+            elif arg == "-P":
+                prepend_script_path = value
+            elif arg == "-A":
+                append_script_path = value
             elif arg == '-h':
                 show_help()
                 exit(0)
@@ -260,14 +268,30 @@ def entry():
 
         try:
             session = device.attach(process.pid)
+
+            # same as jnitrace: https://github.com/chame1eon/jnitrace/blob/27d3ffec9b56d1cad7ccfb78572e076ce04461a2/jnitrace/jnitrace.py#L495-L498
+            if prepend_script_path:
+                prepend_script = session.create_script(open(prepend_script_path).read())
+                prepend_script.load()
+
             path = os.path.dirname(__file__)
             script = session.create_script(open(os.path.join(path, "agent.js")).read())
             script.load()
+
             if enable_deep_search:
                 script.exports.switchmode(True)
                 logging.info("[DEXDump]: deep search mode is enable, maybe wait long time.")
+
             dump(pname, script.exports, mds=mds)
+            
+            if append_script_path:
+                append_script = session.create_script(open(append_script_path).read())
+                append_script.load()
+            
+            if prepend_script_path: prepend_script.unload() 
             script.unload()
+            if append_script_path: append_script.unload()
+
             session.detach()
         except Exception as e:
             click.secho("[Except] - Unable dump dex: {} in \n{}".format(e, traceback.format_tb(
