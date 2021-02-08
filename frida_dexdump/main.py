@@ -200,10 +200,10 @@ def entry():
     enable_deep_search = False
     prepend_script_path = None
     append_script_path = None
-    enable_emulator_mode = True
+    enable_emulator_mode = False
 
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "hn:p:fs:dP:A:")
+        opts, args = getopt.getopt(sys.argv[1:], "hn:p:fEs:dP:A:")
 
         def arg2int(v):
             try:
