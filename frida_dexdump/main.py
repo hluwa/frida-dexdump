@@ -130,13 +130,19 @@ def dump(pkg_name, api, mds=None):
             click.secho("[Except] - {}: {}".format(e, info), bg='yellow')
 
 
-def stop_other(pid, processes):
+def stop_other(pid, processes, is_emulator):
     try:
         for process in processes:
             if process.pid == pid:
-                os.system("adb shell \"su -c 'kill -18 {}'\"".format(process.pid))
+                if is_emulator: 
+                    os.system("adb shell \"su 0 kill -18 {}\"".format(process.pid))
+                else : 
+                    os.system("adb shell \"su -c 'kill -18 {}'\"".format(process.pid))
             else:
-                os.system("adb shell \"su -c 'kill -19 {}'\"".format(process.pid))
+                if is_emulator: 
+                    os.system("adb shell \"su 0 kill -19 {}\"".format(process.pid))
+                else:
+                    os.system("adb shell \"su -c 'kill -19 {}'\"".format(process.pid))
     except:
         pass
 
@@ -170,6 +176,7 @@ def show_help():
                "    -d: [Optional] Enable deep search maybe detected more dex, but speed will be slower.\n" \
                "    -P: [Optional] Prepend a Frida script to run before dexdump does.\n" \
                "    -A: [Optional] Append a Frida script to run after dexdump done.\n" \
+               "    -E: [Optional] Changes 'su -c cmd' to 'su 0 cmd' for emulators.\n" \
                "    -h: show help.\n"
     print(help_str)
 
@@ -193,9 +200,10 @@ def entry():
     enable_deep_search = False
     prepend_script_path = None
     append_script_path = None
+    enable_emulator_mode = False
 
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "hn:p:fs:dP:A:")
+        opts, args = getopt.getopt(sys.argv[1:], "hn:p:fEs:dP:A:")
 
         def arg2int(v):
             try:
@@ -221,6 +229,8 @@ def entry():
             elif arg == '-h':
                 show_help()
                 exit(0)
+            elif arg == '-E':
+                enable_emulator_mode = True
 
     except getopt.GetoptError:
         show_help()
@@ -264,7 +274,7 @@ def entry():
             continue
 
         logging.info("[DEXDump]: found target [{}] {}".format(process.pid, process.name))
-        stop_other(process.pid, processes)
+        stop_other(process.pid, processes, enable_emulator_mode)
 
         try:
             session = device.attach(process.pid)
