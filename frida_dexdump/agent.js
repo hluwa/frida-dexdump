@@ -116,7 +116,7 @@ rpc.exports = {
         var result = [];
         Process.enumerateRanges('r--').forEach(function (range) {
             try {
-                Memory.scanSync(range.base, range.size, "64 65 78 0a 30 ?? ?? 00").forEach(function (match) {
+                Memory.scanSync(range.base, range.size, "64 65 78 0a ?? ?? ?? 00").forEach(function (match) {
 
                     if (range.file && range.file.path
                         && (// range.file.path.startsWith("/data/app/") ||
