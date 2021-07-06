@@ -45,14 +45,23 @@
 - Or, loading as objection plugin
 
     1. clone this repo and move `frida_dexdump` into your plugins folder, eg:
+
         ```
         git clone https://github.com/hluwa/FRIDA-DEXDump ~/Downloads/FRIDA-DEXDump;
         mv ~/Downloads/FRIDA-DEXDump/frida_dexdump ~/.objection/plugins/dexdump
         ```
+
     2. start objection with `-P` or `--plugin-folder` your plugins folder, eg:
+
         ```
         objection -g com.app.name explore -P ~/.objection/plugins
         ```
+
     3. run command:
+
         1. ` plugin dexdump search ` to search and print all dex
         2. ` plugin dexdump dump ` to dump all found dex.
+
+## Internals
+
+[《深入 FRIDA-DEXDump 中的矛与盾》](https://mp.weixin.qq.com/s/n2XHGhshTmvt2FhxyFfoMA)
