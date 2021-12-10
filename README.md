@@ -2,6 +2,12 @@
 
 ![screenshot](screenshot.png)
 
+## Make Jetbrains Great Again
+
+<p align="center">
+    <img src = "https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.png" width = 150>
+    <img src = "https://resources.jetbrains.com/storage/products/company/brand/logos/PyCharm.png" width = 500>
+</p>
 
 ## Features
 1. support fuzzy search broken header dex.
