@@ -2,7 +2,7 @@
 
 ![screenshot](screenshot.png)
 
-## Make Jetbrains Great Again
+## Make JetBrains Great Again
 
 <p align="center">
     <img src = "https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.png" width = 150>
