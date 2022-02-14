@@ -95,8 +95,17 @@ function verify(dexptr: NativePointer, range: RangeDetails, enable_verify_maps: 
 }
 
 function verify_ids_off(dexptr: NativePointer, dex_size: Number) {
-    const string_ids_off = dexptr.add(0x2C).readUInt();
-    return string_ids_off < dex_size;
+    const string_ids_off = dexptr.add(0x3C).readUInt();
+    const type_ids_off = dexptr.add(0x44).readUInt();
+    const proto_ids_off = dexptr.add(0x4C).readUInt();
+    const field_ids_off = dexptr.add(0x54).readUInt();
+    const method_ids_off = dexptr.add(0x5C).readUInt();
+    return string_ids_off < dex_size && string_ids_off >= 0x70
+        && type_ids_off < dex_size && type_ids_off >= 0x70
+        && proto_ids_off < dex_size && proto_ids_off >= 0x70
+        && field_ids_off < dex_size && field_ids_off >= 0x70
+        && method_ids_off < dex_size && method_ids_off >= 0x70;
+
 }
 
 export function searchDex(deepSearch: boolean) {
@@ -146,7 +155,7 @@ export function searchDex(deepSearch: boolean) {
                         const max_size = range.size - dex_base.sub(range.base).toInt32();
                         if (max_size != real_dex_size) {
                             result.push({
-                                "addr": match.address,
+                                "addr": dex_base,
                                 "size": max_size
                             });
                         }

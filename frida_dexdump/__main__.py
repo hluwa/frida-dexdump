@@ -7,10 +7,10 @@ import logging
 import os.path
 import re
 import time
-from frida_dexdump.agent import DexDumpAgent
 from frida_tools.application import ConsoleApplication
 from wallbreaker.connection import Connection
 
+from frida_dexdump.agent import DexDumpAgent
 from frida_dexdump.banner import show_banner
 
 logger = logging.getLogger("frida-dexdump")
@@ -72,10 +72,9 @@ class DexDumpApplication(ConsoleApplication):
         et = time.time()
         logger.info("[*] Successful found {} dex, used {} time.".format(len(ranges), int(et - st)))
         logger.info("[+] Starting dump to '{}'...".format(self.output))
-        idx = 0
+        idx = 1
         for dex in ranges:
             try:
-                idx += 1
                 bs = self.agent.memory_dump(dex['addr'], dex['size'])
                 md = md5(bs)
                 if md in self.mds:
@@ -87,6 +86,7 @@ class DexDumpApplication(ConsoleApplication):
                     out.write(bs)
                 logger.info("[+] DexMd5={}, SavePath={}, DexSize={}"
                             .format(md, out_path, hex(dex['size'])))
+                idx += 1
             except Exception as e:
                 logger.exception("[-] {}: {}".format(e, dex))
         logger.info("[*] All done...")
