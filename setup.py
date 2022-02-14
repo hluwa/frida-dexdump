@@ -6,7 +6,7 @@ import setuptools
 
 setuptools.setup(
     name="frida-dexdump",
-    version="2.0.0",
+    version="2.0.1",
     description="Useful and fast android unpacker",
     author="hluwa",
     author_email="hluwa888@gmail.com",

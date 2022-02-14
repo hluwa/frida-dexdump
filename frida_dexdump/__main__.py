@@ -35,6 +35,9 @@ class DexDumpApplication(ConsoleApplication):
         return "Usage see: frida-dexdump -h"
 
     def _add_options(self, parser):
+        # fixup frida-tools#75 47d020ad1e51a1a5037c630e2de7136b867e86aa
+        if not hasattr(parser, "add_argument") and hasattr(parser, "add_option"):
+            setattr(parser, "add_argument", getattr(parser, "add_option"))
         parser.add_argument("-o", "--output", help="Output folder path, default is './<appname>/'.",
                             type=str, action='store')
         parser.add_argument("-d", "--deep-search", help="Enable deep search mode.",
