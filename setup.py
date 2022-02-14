@@ -1,26 +1,22 @@
 # Author: hluwa <hluwa888@gmail.com>
 # HomePage: https://github.com/hluwa
-# CreatedTime: 8/14/20 23:05
+# CreateTime: 2021/6/3
 
 import setuptools
 
-with open("README.md", "r") as fh:
-    long_description = fh.read()
-
 setuptools.setup(
     name="frida-dexdump",
-    version="1.0.3",
-    description="Fast dex dump in memory based on frida.",
-    long_description=long_description,
-    long_description_content_type="text/markdown",
+    version="2.0.0",
+    description="Useful and fast android unpacker",
     author="hluwa",
     author_email="hluwa888@gmail.com",
-    url="https://github.com/hluwa/FRIDA-DEXDump",
+    url="https://github.com/hluwa/frida-dexdump",
     install_requires=[
-        "frida",
-        "click"
+        "click",
+        "frida-tools",
+        "wallbreaker"
     ],
-    keywords="frida android unpack dex dynamic",
+    keywords="frida android dexdump unpacker wallbreaker",
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
@@ -33,15 +29,15 @@ setuptools.setup(
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
-        "Programming Language :: JavaScript",
+        "Programming Language :: Python :: 3.9",
     ],
-    packages=["frida_dexdump"],
+    packages=setuptools.find_packages(where='.', exclude=(), include=('*',)),
     package_data={
-        "frida_dexdump": ["agent.js"],
+        "frida_dexdump.agent": ["agent.js"]
     },
     entry_points={
         'console_scripts': [
-            "frida-dexdump = frida_dexdump.main:entry"
+            "frida-dexdump = frida_dexdump.__main__:main",
         ]
     }
 )

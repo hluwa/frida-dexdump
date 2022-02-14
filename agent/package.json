@@ -1,0 +1,19 @@
+{
+  "name": "frida-dexdump-agent",
+  "version": "1.0.0",
+  "description": "frida-dexdump Agent",
+  "private": true,
+  "main": "src/index.ts",
+  "scripts": {
+    "prepare": "npm run build",
+    "build": "frida-compile src/index.ts -o ../frida_dexdump/agent/agent.js"
+  },
+  "devDependencies": {
+    "@types/frida-gum": "^14.5.0",
+    "@types/node": "^12.12.34",
+    "frida-compile": "^9.3.0"
+  },
+  "dependencies": {
+    "@babel/compat-data": "^7.12.7"
+  }
+}

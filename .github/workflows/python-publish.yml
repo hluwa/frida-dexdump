@@ -22,10 +22,11 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install setuptools wheel twine
+        sudo apt-get update && DEBIAN_FRONTEND=noninteractive sudo apt-get install -y make
     - name: Build and publish
       env:
         TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
         TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
       run: |
-        python setup.py sdist bdist_wheel
+        make
         twine upload dist/*
