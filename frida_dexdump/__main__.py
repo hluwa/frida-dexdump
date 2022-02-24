@@ -1,12 +1,14 @@
 # Author: hluwa <hluwa888@gmail.com>
 # HomePage: https://github.com/hluwa
 # CreateTime: 2021/6/3
+__version__ = "2.0.1"
+
+import argparse
 import hashlib
-import json
 import logging
 import os.path
-import re
 import time
+
 from frida_tools.application import ConsoleApplication
 from wallbreaker.connection import Connection
 
@@ -25,6 +27,15 @@ class SessionConnection(Connection):
         self.process = str(self.session)
 
 
+def _fixup_version(parser: argparse.ArgumentParser):
+    if not hasattr(parser, "_actions"): return
+
+    for action in parser._actions:
+        if "--version" in action.option_strings \
+                and action.dest == "version":
+            action.version = __version__
+
+
 class DexDumpApplication(ConsoleApplication):
     agent = None
 
@@ -38,6 +49,9 @@ class DexDumpApplication(ConsoleApplication):
         # fixup frida-tools#75 47d020ad1e51a1a5037c630e2de7136b867e86aa
         if not hasattr(parser, "add_argument") and hasattr(parser, "add_option"):
             setattr(parser, "add_argument", getattr(parser, "add_option"))
+
+        _fixup_version(parser)
+
         parser.add_argument("-o", "--output", help="Output folder path, default is './<appname>/'.",
                             type=str, action='store')
         parser.add_argument("-d", "--deep-search", help="Enable deep search mode.",
@@ -46,6 +60,7 @@ class DexDumpApplication(ConsoleApplication):
                             type=int, action='store', default=None)
 
     def _initialize(self, parser, options, args):
+        show_banner()
         self.mds = set()
         self.output = options.output
         self.enable_deep = options.enable_deep
@@ -125,7 +140,6 @@ def fix_header(dex_bytes):
 
 
 def main():
-    show_banner()
     logging.basicConfig(level=logging.INFO)
     DexDumpApplication().run()
 
