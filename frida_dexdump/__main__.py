@@ -99,7 +99,7 @@ class DexDumpApplication(ConsoleApplication):
                     continue
                 self.mds.add(md)
                 bs = fix_header(bs)
-                out_path = os.path.join(self.output, "classes{}.dex".format('%02d' % idx if idx != 1 else ''))
+                out_path = os.path.join(self.output, "classes{}.dex".format('%d' % idx if idx != 1 else ''))
                 with open(out_path, 'wb') as out:
                     out.write(bs)
                 logger.info("[+] DexMd5={}, SavePath={}, DexSize={}"
